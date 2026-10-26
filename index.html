@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>运营商开票管理 PC 端 · 需求说明</title>
+<style>
+  :root{
+    --primary:#2b7cff;
+    --primary-light:#eaf2ff;
+    --text:#1f2329;
+    --text-2:#4e5969;
+    --text-3:#86909c;
+    --border:#e5e6eb;
+    --bg:#f5f6f8;
+    --danger:#f53f3f;
+    --warn:#ff9a2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--text);font-size:14px;line-height:1.7;
+  }
+  .page{max-width:1080px;margin:0 auto;background:#fff;padding:48px 56px 64px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+
+  h1{font-size:26px;font-weight:700;margin-bottom:6px;}
+  .sub{color:var(--text-3);font-size:13px;margin-bottom:28px;}
+
+  h2{
+    font-size:18px;font-weight:600;margin:36px 0 12px;padding-left:12px;
+    border-left:4px solid var(--primary);
+  }
+  h3{font-size:15px;font-weight:600;margin:22px 0 10px;color:var(--text);}
+  p{margin-bottom:10px;color:var(--text-2);}
+
+  table.doc{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:6px;}
+  table.doc th{
+    background:#f7f8fa;color:var(--text-2);font-weight:600;text-align:left;
+    padding:9px 12px;border:1px solid var(--border);white-space:nowrap;
+  }
+  table.doc td{padding:9px 12px;border:1px solid var(--border);color:var(--text-2);vertical-align:top;}
+  table.doc td.k{color:var(--text);font-weight:500;white-space:nowrap;background:#fcfcfd;}
+  table.doc tr:hover td{background:#fafbfc;}
+
+  .rule{
+    background:var(--primary-light);border-radius:6px;padding:10px 14px;margin:12px 0 18px;
+    font-size:13px;color:var(--text-2);
+  }
+  .rule b{color:var(--text);}
+  .rid{color:var(--primary);font-weight:600;}
+
+  ul{margin:0 0 12px 20px;color:var(--text-2);}
+  li{margin-bottom:5px;}
+  code{
+    background:#f2f3f5;border-radius:3px;padding:1px 6px;font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d14;
+  }
+  .tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:12px;margin-right:6px;}
+  .t-must{background:#ffece8;color:var(--danger);}
+  .t-opt{background:#f2f3f5;color:var(--text-3);}
+  .t-note{background:#fff7e8;color:#b0781a;}
+  .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--text-3);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>运营商开票管理 PC 端 · 需求说明</h1>
+  <div class="sub">适用范围：运营商侧 PC 后台「申请开票」「发票抬头」两个页面 · 交互基线：与 OS 端（内部后台）保持一致</div>
+
+  <h2>一、范围与背景</h2>
+  <table class="doc">
+    <tr><td class="k">在范围内</td><td>① 申请开票页：资金明细筛选 → 选择认证主体 → 填写开票信息 → 提交；② 发票抬头页：抬头列表 + 新增/编辑/删除。</td></tr>
+    <tr><td class="k">不在范围内</td><td>开票管理列表页（由业务方自行设计，本文档不涉及）；开票历史页。</td></tr>
+    <tr><td class="k">交互基线</td><td>PC 端为单页操作，不做步骤条；先筛选搜索，再选择认证主体，最后填写开票信息；表单在上/下的顺序跟随操作顺序，按钮左置，返回/保存右下角。</td></tr>
+    <tr><td class="k">与 OS 端差异</td><td><b>去掉「申请信息」区块</b>（客户名称 / 申请类型 / 开票主体 / 合同附件 / 备注）。运营商侧无该概念，开票主体由认证主体承担。</td></tr>
+  </table>
+
+  <h2>二、系统与配置依赖</h2>
+  <table class="doc">
+    <tr><td class="k">交易类型</td><td>由 <b>OS 端配置</b>，选项可增、减、改名；运营商 PC 端只消费配置结果，<b>不做硬编码枚举</b>。「全部」为系统固定项，与具体类型互斥。</td></tr>
+    <tr><td class="k">单次开票金额下限</td><td>由 <b>OS 端配置</b>，当前值 <b>500 元</b>；配置变更时前端校验与提示文案自动跟随，不在前端写死。</td></tr>
+    <tr><td class="k">费用明细项</td><td>由交易流水产生，随交易类型配置联动。</td></tr>
+  </table>
+
+  <h2>三、术语</h2>
+  <table class="doc">
+    <tr><td class="k">认证主体</td><td>资金流水的归属主体，是开票的起点；一个开票申请只能对应一个认证主体。</td></tr>
+    <tr><td class="k">发票抬头</td><td>开票时使用的名称。取值恒等于认证主体，不可修改。</td></tr>
+    <tr><td class="k">费用明细</td><td>认证主体下的交易明细行（费用明细项 / 笔数 / 金额）。</td></tr>
+    <tr><td class="k">账期</td><td>费用所属月份，按月开票，不支持按日区间。</td></tr>
+  </table>
+
+  <h2>四、页面一：申请开票</h2>
+
+  <h3>3.1 布局顺序</h3>
+  <ul>
+    <li>页面自上而下：面包屑 → <b>资金明细</b>卡片（筛选区 + 明细表格）→ <b>开票信息</b>卡片（表单）→ 右下角操作区（保存）。</li>
+    <li>两块顺序不可颠倒：先筛出数据，才能选主体，最后才能填抬头。</li>
+  </ul>
+
+  <h3>3.2 资金明细 · 筛选区</h3>
+  <table class="doc">
+    <tr><td class="k">交易类型</td><td>多选下拉。选项<b>由 OS 配置</b>（当前示例：支付手续费 / 算法识别费 / 平台使用费 / 提现手续费 / 供应链收入 / 退款手续费返还），可增可减，前端不写死。</td></tr>
+    <tr><td class="k"></td><td>选中任意具体类型时自动取消「全部」；全部取消时自动回到「全部」。</td></tr>
+    <tr><td class="k"></td><td>收起态文案：全选显示「全部」；选 1–2 项显示具体名称；选 3 项以上显示「已选 N 项」。</td></tr>
+    <tr><td class="k">账期时间</td><td>起止月份（<code>YYYY-MM</code>）。起、止均只能选择 <b>2026-06 及之后</b>的月份，且结束月份 ≥ 开始月份。</td></tr>
+    <tr><td class="k">按钮</td><td>搜索（主按钮，执行后刷新明细）、重置（恢复全部类型 + 默认账期 + 清空已选主体）。</td></tr>
+    <tr><td class="k">筛选失效处理</td><td>若某认证主体的明细被筛选条件全部排除，该主体不出列表，且若已被选中则自动取消选中。</td></tr>
+  </table>
+  <div class="rule"><span class="rid">R1</span> 账期下限固定为 2026 年 6 月，早于该月份的账期不可选。</div>
+
+  <h3>3.3 资金明细 · 表格</h3>
+  <table class="doc">
+    <tr><td class="k">分组结构</td><td>按认证主体分组，每组一行组头 + 展开该主体的费用明细行。</td></tr>
+    <tr><td class="k">列</td><td>选择（单选） / 认证主体 / 费用明细项 / 笔数 / 金额（元）。</td></tr>
+    <tr><td class="k">组头内容</td><td>单选按钮 + 主体名称 + 「共 N 笔，可开票金额 ¥X」，笔数与金额随筛选结果变化。</td></tr>
+    <tr><td class="k">金额样式</td><td>负数（退款类）标红；金额右对齐。</td></tr>
+    <tr><td class="k">表尾</td><td>「已选认证主体：X」「合计金额：¥X（N 笔）」，随筛选与选中结果联动。</td></tr>
+    <tr><td class="k">提示条</td><td>卡片底部文字：<b>订单的认证主体需和发票抬头为同一个；单次开票金额最少为 500 元，无法达到开票金额，可联系售后～</b></td></tr>
+  </table>
+
+  <h3>3.4 开票信息 · 表单</h3>
+  <table class="doc">
+    <tr><td class="k">发票抬头</td><td><span class="tag t-must">必填</span>选中认证主体后自动带出该主体名称；<b>不可修改</b>（未维护抬头的主体也带出名称，仅下方资料留空待填）。未选主体时控件置灰，占位「请先选择认证主体」。</td></tr>
+    <tr><td class="k">抬头类型</td><td>企业 / 个人，默认<b>个人</b>。已维护抬头的主体带出记录值；未维护时可自行选择。</td></tr>
+    <tr><td class="k">发票类型</td><td><span class="tag t-must">必填</span>普票 / 专票，默认<b>普票</b>。</td></tr>
+    <tr><td class="k">企业资料</td><td>单位税号 / 单位地址 / 单位电话 / 开户银行 / 银行账户，仅抬头类型为<b>企业</b>时展示；已维护抬头的按记录带出，未维护的留空由用户填写。</td></tr>
+    <tr><td class="k">邮箱地址</td><td><span class="tag t-must">必填</span>用于接收发票。</td></tr>
+    <tr><td class="k">备注</td><td><span class="tag t-opt">选填</span></td></tr>
+  </table>
+  <div class="rule">
+    <span class="rid">R2</span> 发票抬头恒等于认证主体，任何情况下都不可在申请页修改。<br>
+    <span class="rid">R3</span> 抬头类型为<b>个人</b>时，发票类型只能为普票，专票置灰不可选；切换为个人时若已选专票，自动回落为普票。
+  </div>
+
+  <h3>3.5 保存与校验</h3>
+  <table class="doc">
+    <tr><td class="k">操作区</td><td>右下角：保存（主按钮）。</td></tr>
+    <tr><td class="k">校验顺序</td><td>① 未选认证主体 → 拦截；② 可开票金额 &lt; 500 元 → 拦截。</td></tr>
+    <tr><td class="k">金额口径</td><td>按<b>筛选后</b>的明细行计算（笔数、金额均随当前筛选条件）。</td></tr>
+    <tr><td class="k">成功态</td><td>提交成功弹窗：展示开票金额与笔数，提示 1-3 个工作日内开具并发送至邮箱。</td></tr>
+  </table>
+  <div class="rule"><span class="rid">R4</span> 单次开票金额下限由 <b>OS 配置</b>（当前 500 元），低于该值不允许提交；配置变更时校验与提示文案自动跟随。</div>
+  <div class="rule"><span class="rid">R5</span> 拦截提示文案：<b>单次开票金额最少为 500 元，当前认证主体可开票金额 ¥X，无法达到开票金额，可联系售后～</b></div>
+
+  <h2>五、页面二：发票抬头</h2>
+
+  <h3>5.1 列表</h3>
+  <table class="doc">
+    <tr><td class="k">按钮位置</td><td>左上：新增发票抬头（主按钮）。</td></tr>
+    <tr><td class="k">列</td><td>发票抬头 / 抬头类型 / 单位税号 / 单位地址 / <b>单位电话</b> / <b>开户银行</b> / <b>银行账户</b> / 操作（编辑、删除）。</td></tr>
+    <tr><td class="k">展示规则</td><td>抬头类型为<b>个人</b>时，企业资料五项均显示「-」。</td></tr>
+    <tr><td class="k">空态</td><td>列表为空时显示「真的没有了~」。</td></tr>
+    <tr><td class="k">删除</td><td>二次确认后删除。</td></tr>
+  </table>
+
+  <h3>5.2 新增 / 编辑弹窗</h3>
+  <table class="doc">
+    <tr><td class="k">字段</td><td>与小程序「发票详情」一致：发票抬头、抬头类型、单位税号、单位地址、单位电话、开户银行、银行账户。</td></tr>
+    <tr><td class="k">发票抬头</td><td><span class="tag t-must">必填</span>占位「请输入发票抬头」。</td></tr>
+    <tr><td class="k">抬头类型</td><td><span class="tag t-must">必填</span>企业 / 个人，默认企业。</td></tr>
+    <tr><td class="k">单位税号</td><td><span class="tag t-must">企业必填</span>占位「输入税号或营业执照代码」。</td></tr>
+    <tr><td class="k">单位地址</td><td><span class="tag t-must">企业必填</span>≤100 字，占位「100字以内，不能为空」。</td></tr>
+    <tr><td class="k">单位电话</td><td><span class="tag t-must">企业必填</span>≤20 字，占位「20字以内，不能为空」。</td></tr>
+    <tr><td class="k">开户银行 / 账户</td><td><span class="tag t-opt">选填</span>占位「请输入」。</td></tr>
+    <tr><td class="k">显隐</td><td>抬头类型为个人时，企业资料五字段整体隐藏。</td></tr>
+    <tr><td class="k">保存</td><td>校验不通过时在弹窗内显示红字提示，不关闭弹窗；校验通过后关闭并回写列表。</td></tr>
+  </table>
+  <div class="rule"><span class="rid">R6</span> 个人抬头不采集税号/地址/电话/开户行/账户；企业抬头必须采集税号、地址、电话。</div>
+
+  <h2>六、页面三：开票详情</h2>
+
+  <h3>6.1 定位</h3>
+  <ul>
+    <li>入口：开票管理列表页 → 操作列「详情」。页面为<b>只读</b>，不可编辑。</li>
+  </ul>
+
+  <h3>6.2 发票信息（只读）</h3>
+  <table class="doc">
+    <tr><td class="k">展示字段</td><td>抬头类型、发票抬头、单位税号、单位地址、单位电话、开户银行、银行账户、发票类型、开票金额、状态、申请人、申请时间、备注。</td></tr>
+    <tr><td class="k">字段来源</td><td>取自提交时的快照；企业资料字段在抬头类型为个人时不展示（与个人抬头不采集一致）。</td></tr>
+    <tr><td class="k">金额</td><td>开票金额按提交时口径展示，与资金明细合计一致。</td></tr>
+    <tr><td class="k">空值</td><td>备注等选填项为空时展示「—」。</td></tr>
+  </table>
+
+  <h3>6.3 资金明细（只读）</h3>
+  <table class="doc">
+    <tr><td class="k">列</td><td>交易类型 / 费用明细项 / 账期 / 笔数 / 金额（元）。</td></tr>
+    <tr><td class="k">样式</td><td>负数（退款类）标红；金额右对齐。</td></tr>
+    <tr><td class="k">表尾</td><td>「共 N 笔」「合计金额：¥X」。明细内容与金额口径与提交时一致，不随后续配置变更而变化。</td></tr>
+    <tr><td class="k">操作区</td><td>右下角：返回。</td></tr>
+  </table>
+  <div class="rule"><span class="rid">R9</span> 详情页为提交数据的快照，交易类型配置变更后<b>不回改历史详情</b>。</div>
+
+  <h2>七、规则汇总</h2>
+  <table class="doc">
+    <tr><td class="k">R1</td><td>账期只能选择 2026-06 及之后，结束月份 ≥ 开始月份。</td></tr>
+    <tr><td class="k">R2</td><td>发票抬头恒等于认证主体，不可修改。</td></tr>
+    <tr><td class="k">R3</td><td>个人抬头 → 发票类型只能普票，专票置灰。</td></tr>
+    <tr><td class="k">R4</td><td>单次开票金额 ≥ 500 元。</td></tr>
+    <tr><td class="k">R5</td><td>金额不足时的拦截文案（见 3.5）。</td></tr>
+    <tr><td class="k">R6</td><td>抬头页字段规则：个人不采集企业资料，企业必填税号/地址/电话。</td></tr>
+    <tr><td class="k">R9</td><td>开票详情为提交快照，交易类型等配置变更不回改历史详情。</td></tr>
+    <tr><td class="k">R10</td><td>交易类型选项、单次开票金额下限均由 OS 端配置，前端不硬编码。</td></tr>
+    <tr><td class="k">R7</td><td>账期提示文案：<b>仅支持 2026 年 6 月及之后的账期</b>（常驻在账期控件后）。</td></tr>
+    <tr><td class="k">R8</td><td>发票类型提示文案：<b>抬头类型为个人时，仅支持开具普票</b>（仅个人抬头时显示）。</td></tr>
+  </table>
+
+  <h2>八、原型交付</h2>
+  <table class="doc">
+    <tr><td class="k">申请开票页</td><td>https://wyy1746919440.github.io/operator-invoice-apply/</td></tr>
+    <tr><td class="k">发票抬头页</td><td>https://wyy1746919440.github.io/operator-invoice-titles/</td></tr>
+    <tr><td class="k">开票详情页</td><td>https://wyy1746919440.github.io/operator-invoice-detail/</td></tr>
+    <tr><td class="k">说明</td><td>原型为免登录直链，可直接点击体验完整交互链路。</td></tr>
+  </table>
+
+  <div class="foot">规则编号 R1–R10 可用于评审与开发对齐时的精确引用。</div>
+</div>
+</body>
+</html>
