@@ -265,16 +265,29 @@
     <tr><td class="k">R8</td><td>发票类型提示文案：<b>抬头类型为个人时，仅支持开具普票</b>（仅个人抬头时显示）。</td></tr>
   </table>
 
-  <h2>八、原型交付</h2>
+  <h2>八、OS 端补充需求（新增开票页）</h2>
+  <table class="doc">
+    <tr><td class="k">页面</td><td>OS 后台「结算中心 / 开票管理 / 新增开票」：申请信息 + 发票信息 + 交易明细筛选表格 + 返回/保存。</td></tr>
+    <tr><td class="k">申请信息</td><td>客户名称（必填）、申请类型（平台开票 / 客户开票）、开票主体、合同附件、备注（≤200 字）。</td></tr>
+    <tr><td class="k">发票信息</td><td>开票类型（快消品运营 / 售货机运营）、发票抬头（下拉选择客户抬头）、发票类型（普票 / 专票）；选中抬头后自动带出抬头类型、单位税号、单位地址、单位电话、开户银行、银行账户（只读）。</td></tr>
+    <tr><td class="k">新增抬头</td><td>发票抬头旁提供「新增抬头」按钮，弹窗字段与运营商侧发票抬头弹窗一致（发票抬头 / 抬头类型 / 税号 / 地址 / 电话 / 开户行 / 账户）；保存后自动选中新抬头并带出资料，无需跳转客户资料页。</td></tr>
+    <tr><td class="k">筛选范围</td><td>账期时间、交易时间两个区间的可选范围<b>从 1 年放宽到 5 年</b>。</td></tr>
+    <tr><td class="k">交易明细表</td><td>列：交易类型 / 笔数 / 金额 / 账期开始时间 / 账期结束时间 / 交易开始时间 / 交易结束时间；底部总计行；搜索 / 重置。</td></tr>
+  </table>
+  <div class="rule"><span class="rid">R14</span> OS 端开票支持在开票流程内直接为客户新增抬头，保存后自动选中并带出资料。</div>
+  <div class="rule"><span class="rid">R15</span> OS 端账期时间、交易时间筛选范围从 1 年增加到 5 年。</div>
+
+  <h2>九、原型交付</h2>
   <table class="doc">
     <tr><td class="k">申请开票页</td><td><a href="https://wyy1746919440.github.io/operator-invoice-apply/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-apply/</a></td></tr>
     <tr><td class="k">发票抬头页</td><td><a href="https://wyy1746919440.github.io/operator-invoice-titles/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-titles/</a></td></tr>
     <tr><td class="k">开票详情页</td><td><a href="https://wyy1746919440.github.io/operator-invoice-detail/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-detail/</a></td></tr>
     <tr><td class="k">发票详情页（客户开票）</td><td><a href="https://wyy1746919440.github.io/operator-invoice-customer/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-customer/</a></td></tr>
+    <tr><td class="k">OS 端新增开票页</td><td><a href="https://wyy1746919440.github.io/os-invoice-create/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/os-invoice-create/</a></td></tr>
     <tr><td class="k">说明</td><td>原型为免登录直链，可直接点击体验完整交互链路。</td></tr>
   </table>
 
-  <div class="foot">规则编号 R1–R10 可用于评审与开发对齐时的精确引用。</div>
+  <div class="foot">规则编号 R1–R15 可用于评审与开发对齐时的精确引用。</div>
 </div>
 </body>
 </html>
