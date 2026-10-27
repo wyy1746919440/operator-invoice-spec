@@ -235,10 +235,9 @@
 
   <h3>7.4 上传发票</h3>
   <table class="doc">
+    <tr><td class="k">表单字段</td><td>仅两项（与小程序弹窗一致）：开票金额、上传发票文件。<b>不采集</b>发票号码、开票日期、发票类型。</td></tr>
+    <tr><td class="k">开票金额</td><td><span class="tag t-must">必填</span>数字，≥0；提交后回显到开票信息。</td></tr>
     <tr><td class="k">文件</td><td><span class="tag t-must">必填</span>支持 jpg / png / pdf，单个不超过 10M；可删除重传。</td></tr>
-    <tr><td class="k">发票号码</td><td><span class="tag t-must">必填</span>8-20 位。</td></tr>
-    <tr><td class="k">开票日期</td><td><span class="tag t-must">必填</span>日期选择。</td></tr>
-    <tr><td class="k">发票类型</td><td><span class="tag t-must">必填</span>普票 / 专票，提交后回显到开票信息。</td></tr>
     <tr><td class="k">提交</td><td>校验不通过在表单下方红字提示；通过后横幅切换为「待平台审核」，上传区隐藏，不可重复提交；驳回后恢复上传入口。</td></tr>
   </table>
 
