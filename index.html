@@ -279,17 +279,33 @@
   <div class="rule"><span class="rid">R14</span> OS 端开票支持在开票流程内直接为客户新增抬头，保存后自动选中并带出资料。</div>
   <div class="rule"><span class="rid">R15</span> OS 端账期时间、交易时间筛选范围从 1 年增加到 5 年。</div>
 
-  <h2>九、原型交付</h2>
+  <h2>九、OS 端线下开票补录（新建）</h2>
+  <table class="doc">
+    <tr><td class="k">背景</td><td>线下已开票的供应链订单在系统内没有对应开票单，会长期停留在「未开票」并出现在「新增开票」的可选订单列表中，存在重复开票风险。</td></tr>
+    <tr><td class="k">入口</td><td>PC 后台「结算中心 / 开票管理」列表 → <b>线下开票补录</b>。</td></tr>
+    <tr><td class="k">页面结构</td><td>补录信息（商户 / 开票类型 / 开票日期 / 导入Excel）→ 订单校验（汇总 + 逐单结果）→ 开票图片 → 右下角返回 / 提交。</td></tr>
+    <tr><td class="k">开票类型</td><td>固定「快销品采购」，不可修改；本期只处理供应链订单。</td></tr>
+    <tr><td class="k">导入口径</td><td>只读取表头中的「订单流水号」「折后商品销售金额」两列，其余列忽略；缺列提示表格格式不正确。金额列需另存为数值（公式未重算会读到旧值）。</td></tr>
+    <tr><td class="k">校验口径</td><td>同一流水号多行合并为 1 单、金额按行四舍五入到分再相加；主单与 <code>-D</code> 对冲单必须同时导入；四项准入（订单存在 / 属于所选商户 / 交易完成 / 未开票·已关闭·已作废）与金额比对全部通过才可提交。</td></tr>
+    <tr><td class="k">结果展示</td><td>逐单展示订单流水号、系统订单金额、表格金额、校验结果；不通过时给出原因（订单不存在 / 不属于所选商户 / 非交易完成 / 已开过票 / 对冲单未齐全 / 金额不一致）。</td></tr>
+    <tr><td class="k">与原开票管理联动</td><td>补录生成的开票单记为「线下补录」；开票管理列表新增「开票来源」列与筛选，详情展示开票来源，线下补录单额外展示导入文件名、导入人、导入时间，并支持作废。</td></tr>
+    <tr><td class="k">规则编号</td><td>本页规则沿用需求文档 R1–R14（入口 / 选商户 / 开票类型 / 开票日期 / 导入 / 合并 / 校验 / 对冲 / 金额 / 结果展示 / 提交条件 / 图片 / 结果 / 防重复）。</td></tr>
+  </table>
+  <div class="rule"><span class="rid">R16</span> 开票管理列表与详情增加「开票来源」（线上申请 / 线下补录）；线下补录单额外展示导入文件名、导入人、导入时间，且支持作废，作废后关联订单回写「已作废」。</div>
+  <div class="rule"><span class="rid">R17</span> 线下补录只要存在任一订单校验不通过即整批不可提交，不允许只提交校验通过的部分；已补录成功的订单再次导入判为「已开过票」，不会重复标记。</div>
+
+  <h2>十、原型交付</h2>
   <table class="doc">
     <tr><td class="k">申请开票页</td><td><a href="https://wyy1746919440.github.io/operator-invoice-apply/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-apply/</a></td></tr>
     <tr><td class="k">发票抬头页</td><td><a href="https://wyy1746919440.github.io/operator-invoice-titles/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-titles/</a></td></tr>
     <tr><td class="k">开票详情页</td><td><a href="https://wyy1746919440.github.io/operator-invoice-detail/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-detail/</a></td></tr>
     <tr><td class="k">发票详情页（客户开票）</td><td><a href="https://wyy1746919440.github.io/operator-invoice-customer/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/operator-invoice-customer/</a></td></tr>
     <tr><td class="k">OS 端新增开票页</td><td><a href="https://wyy1746919440.github.io/os-invoice-create/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/os-invoice-create/</a></td></tr>
+    <tr><td class="k">OS 端线下开票补录页</td><td><a href="https://wyy1746919440.github.io/os-invoice-offline/" target="_blank" style="color:var(--primary);text-decoration:none;">https://wyy1746919440.github.io/os-invoice-offline/</a></td></tr>
     <tr><td class="k">说明</td><td>原型为免登录直链，可直接点击体验完整交互链路。</td></tr>
   </table>
 
-  <div class="foot">规则编号 R1–R15 可用于评审与开发对齐时的精确引用。</div>
+  <div class="foot">规则编号 R1–R17 可用于评审与开发对齐时的精确引用。</div>
 </div>
 </body>
 </html>
